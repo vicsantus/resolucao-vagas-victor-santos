@@ -1,13 +1,24 @@
-var data =  require("./fakeData");
+const data = require('./fakeData');
 
-module.exports =  function(req, res) {
-  
-    var id =  req.query.id;
+module.exports = (req, res) => {
+  const { id } = req.query;
+  const { name, job } = req.body; // Pega name e job de dentro do body
 
-    const reg = data.find(d => id == id);
-    reg.name = req.body.name;
-    reg.job = req.body.job;
+  // Caso não encontre name, job ou o id retorna um erro.
+  if (!name || !job || !id) {
+    return res.send({ Error: 'Name, Job ou id não encontrados na requisição' });
+  }
 
-    res.send(reg);
+  // Aqui tambem poderia ser usado algum algoritmo mais complexo, porém, a função find tem complexidade O(n)
+  let reg = data.find((user) => user.id == id);
 
+  // Caso não encontre id não seja encontrado.
+  if (!reg) {
+    return res.send({ Error: 'Id não encontrado' });
+  }
+
+  // Utilizando spread fica mais facil e mais intuitivo de ler o código
+  reg = { ...reg, name, job };
+
+  return res.send(reg);
 };
