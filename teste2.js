@@ -1,4 +1,5 @@
 const data = require('./fakeData');
+const { createToken } = require('./middleware/Auth');
 
 module.exports = function (req, res) {
   const { name, job } = req.body;
@@ -35,5 +36,5 @@ module.exports = function (req, res) {
 
   data.push(newUser);
 
-  return res.send(newUser);
+  return res.send({ ...newUser, token: createToken(newUser) });
 };
