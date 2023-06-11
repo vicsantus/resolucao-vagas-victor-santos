@@ -15,6 +15,9 @@ const getUser = (req, res, _next) => {
     let midName = data[mid].name;
 
     if (midName === name) {
+      // Adicionado ternário que supostamente adiciona a chave access dentro do banco de dados para saber quantas vezes o usuario foi acessado
+      data[mid].access = data[mid].access ? data[mid].access++ : 1;
+
       return res.send(data[mid]);
     } else if (midName < name) {
       low = mid + 1;
