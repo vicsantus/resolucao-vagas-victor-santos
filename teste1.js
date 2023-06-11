@@ -27,7 +27,7 @@ const getUser = (req, res, _next) => {
 };
 
 const getUsers = (_req, res, _next) => {
-  res.send(data);
+  return res.send(data);
 };
 
 module.exports = {
