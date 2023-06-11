@@ -1,24 +1,36 @@
-var data =  require("./fakeData");
+const data = require('./fakeData');
+// Retirei todos os "var"s por conta de fugir do escopo. Esse padrão segue para dos os outros testes.
 
-const getUser = ( req, res, next ) => {
-    
-    var name =  req.query.name;
+// Coloquei underline _ em todos os argumentos chamados mas não utilizados. Esse padrão segue para dos os outros testes.
+const getUser = (req, res, _next) => {
+  const { name } = req.query;
 
-    for(let i = 0; i < data.length;  i++) {
-        if(i.name == name) {
-            res.send(data[i]);
-        }
+  // Decidi utilizar um algoritmo de busca binário de complexidade O(log n) pois num bd curto como do exemplo, um simples algoritmo de busca
+  // ordenada (O(n)) resolveria, porém, numa aplicação muito maior busca binária é muito mais escalavel.
+  let low = 0;
+  let high = data.length - 1;
+
+  while (low <= high) {
+    let mid = Math.floor((low + high) / 2);
+    let midName = data[mid].name;
+
+    if (midName === name) {
+      return res.send(data[mid]);
+    } else if (midName < name) {
+      low = mid + 1;
+    } else {
+      high = mid - 1;
     }
+  }
 
+  return res.send({ error: 'Nome não encontrado' });
 };
 
-const getUsers = ( req, res, next ) => {
-    
-    res.send(data);
-    
+const getUsers = (_req, res, _next) => {
+  res.send(data);
 };
 
 module.exports = {
-    getUser,
-    getUsers
+  getUser,
+  getUsers,
 };
